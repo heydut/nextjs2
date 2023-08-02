@@ -5,12 +5,13 @@ import Image from "next/image";
 
 async function getData() {
   const res = await fetch("http://localhost:3000/api/posts", {
-    // next: { revalidate: 10 },
     cache: "no-store",
   });
+
   if (!res.ok) {
-    throw new Error("Something went wrong");
+    throw new Error("Failed to fetch data");
   }
+
   return res.json();
 }
 
@@ -19,23 +20,19 @@ const Blog = async () => {
   return (
     <div className={styles.mainContainer}>
       {data.map((item) => (
-        <Link
-          href={`/blog/${item._id}`}
-          className={styles.container}
-          key={item.id}
-        >
+        <Link href={`/blog/${item._id}`} className={styles.container} key={item.id}>
           <div className={styles.imageContainer}>
             <Image
               src={item.img}
-              alt="Image"
+              alt=""
               width={400}
-              height={400}
+              height={250}
               className={styles.image}
             />
           </div>
           <div className={styles.content}>
             <h1 className={styles.title}>{item.title}</h1>
-            <p className={styles.description}>{item.description}</p>
+            <p className={styles.desc}>{item.desc}</p>
           </div>
         </Link>
       ))}
