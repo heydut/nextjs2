@@ -1,13 +1,13 @@
 "use client";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import React, { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
 import styles from "./page.module.css";
 import useSWR from "swr";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+// import ReactQuill from "react-quill";
+import dynamic from "next/dynamic";
 
 const modules = {
   toolbar: [
@@ -52,7 +52,7 @@ const formats = [
   "link",
 ];
 
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false }); // Import ReactQuill dynamically
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const Dashboard = () => {
   //OLD WAY TO FETCH DATA
@@ -81,9 +81,7 @@ const Dashboard = () => {
   // }, []);
 
   const session = useSession();
-
   const router = useRouter();
-
   const [content, setContent] = useState("");
 
   //NEW WAY TO FETCH DATA
@@ -137,12 +135,6 @@ const Dashboard = () => {
       console.log(err);
     }
   };
-  useEffect(() => {
-    // Initialize ReactQuill only when running in the browser
-    if (typeof window !== "undefined") {
-      ReactQuill.importQuill("formats/link").link;
-    }
-  }, []);
 
   if (session.status === "authenticated") {
     return (
