@@ -1,10 +1,55 @@
 "use client";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import useSWR from "swr";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+
+const modules = {
+  toolbar: [
+    [{ header: "1" }, { header: "2" }],
+    [{ size: [] }],
+    [
+      "bold",
+      "italic",
+      "underline",
+      "strike",
+      "blockquote",
+      { color: ["#ffffff", "#dc2626", "#16a34a", "#7c3aed"] },
+      { background: ["#ffffff", "#dc2626", "#16a34a", "#7c3aed"] },
+    ],
+    [
+      { list: "ordered" },
+      { list: "bullet" },
+      { indent: "-1" },
+      { indent: "+1" },
+    ],
+    ["link"],
+  ],
+  clipboard: {
+    // toggle to add extra line breaks when pasting HTML:
+    matchVisual: false,
+  },
+};
+
+const formats = [
+  "header",
+  "size",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "blockquote",
+  "color",
+  "background",
+  "list",
+  "bullet",
+  "indent",
+  "link",
+];
 
 const Dashboard = () => {
   //OLD WAY TO FETCH DATA
@@ -36,6 +81,8 @@ const Dashboard = () => {
 
   const router = useRouter();
 
+  const [content, setContent] = useState("");
+
   //NEW WAY TO FETCH DATA
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
@@ -57,7 +104,6 @@ const Dashboard = () => {
     const title = e.target[0].value;
     const desc = e.target[1].value;
     const img = e.target[2].value;
-    const content = e.target[3].value;
 
     try {
       await fetch("/api/posts", {
@@ -72,6 +118,7 @@ const Dashboard = () => {
       });
       mutate();
       e.target.reset();
+      setContent("");
     } catch (err) {
       console.log(err);
     }
@@ -114,12 +161,19 @@ const Dashboard = () => {
           <input type="text" placeholder="Title" className={styles.input} />
           <input type="text" placeholder="Desc" className={styles.input} />
           <input type="text" placeholder="Image" className={styles.input} />
-          <textarea
+          {/* <textarea
             placeholder="Content"
             className={styles.textArea}
             cols="30"
             rows="10"
-          ></textarea>
+          ></textarea> */}
+          <ReactQuill
+            value={content} // Set the value of ReactQuill
+            onChange={setContent} // Update the content state when Quill content changes
+            modules={modules}
+            formats={formats}
+            theme="snow"
+          />
           <button className={styles.button}>Send</button>
         </form>
       </div>
