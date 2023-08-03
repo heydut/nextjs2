@@ -2,6 +2,12 @@
 const nextConfig = {
   images: {
     domains: ["images.pexels.com", "theperfectroundgolf.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+    ],
   },
 };
 
